@@ -106,11 +106,6 @@ try:
         learner.train(train_exs, num_iter=1)
         (acc, errs) = learner.test(test_exs)
         print '[epoch %d]' % it, 'accuracy = ', acc
-        experiment.log_json(result={
-            'task': task,
-            'acc': acc,
-            'errs': errs
-        })
 
         # Save model every 5 rounds, evaluate.py
         if it % 5 == 0:
