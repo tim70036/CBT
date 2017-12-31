@@ -328,7 +328,6 @@ class CBTLearner(object):
         contexts = self.encode_context_selfsup(ex, param_b=param_b)
         return np.array([context[param_b] for context in contexts], dtype=np.int64)
 
-
     def arch_memnet_selfsup(self):
         '''
         memory net with self supervision.
@@ -360,7 +359,6 @@ class CBTLearner(object):
             'cvs': T.lmatrix('cvs')
         }
         return (probs, inputs, params)
-
 
     def loss_selfsup(self, probs, yvs):
         return -mean(log(T.sum(probs * yvs, axis=1)))

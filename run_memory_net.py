@@ -14,7 +14,7 @@ sys.setrecursionlimit(1000000000)
 parser = argparse.ArgumentParser(description='LSTM Embedding Baseline')
 parser.add_argument('--task', type=str, default='cn')
 parser.add_argument('--lr', type=float, default=0.0001)
-parser.add_argument('--dim', type=int, default=200)
+parser.add_argument('--dim', type=int, default=100)
 parser.add_argument('--iter', type=int, default=20)
 parser.add_argument('--encoder', type=str, default='bow')
 parser.add_argument('--memory', type=str, default='lexical')
@@ -111,6 +111,14 @@ try:
             'acc': acc,
             'errs': errs
         })
+
+        # Save model every 5 rounds, evaluate.py
+        if it % 5 == 0:
+            print 'saving model...'
+            print colorize('[arguments]\t' + str(args), 'red')
+            experiment.log_pickle(fprop=learner.fprop,
+            bprop=learner.bprop)
+
         experiment.next()
 except:
     type, value, tb = sys.exc_info()

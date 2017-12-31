@@ -4,6 +4,7 @@ from cbtest.config import *
 from cbtest.baseline.embedding import *
 from cbtest.evaluate import Experiment
 from six.moves import cPickle as pickle
+from os import path
 import random
 import pdb, traceback, sys
 
@@ -15,7 +16,7 @@ sys.setrecursionlimit(1000000000)
 parser = argparse.ArgumentParser(description='LSTM Embedding Baseline')
 parser.add_argument('--task', type=str, default='cn')
 parser.add_argument('--lr', type=float, default=0.0001)
-parser.add_argument('--dim', type=int, default=200)
+parser.add_argument('--dim', type=int, default=100)
 parser.add_argument('--iter', type=int, default=20)
 parser.add_argument('--encoder', type=str, default='bow')
 parser.add_argument('--memory', type=str, default='lexical')
@@ -100,7 +101,10 @@ try:
 
     # RUNRUNRUN
     learner.compile()
-
+except:
+    type, value, tb = sys.exc_info()
+    traceback.print_exc()
+    pdb.post_mortem(tb)
 
 print 'loading model...'
 f = open(path.join('model', 'fprop'), 'r')
@@ -108,4 +112,6 @@ learner.fprop = pickle.load(f)
 f = open(path.join('model', 'bprop'), 'r')
 learner.bprop = pickle.load(f)
 print 'load complete'
+
+print 'testing model'
 
