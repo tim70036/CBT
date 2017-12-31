@@ -18,20 +18,29 @@ def read_cbt(path, limit=None):
         context = []
         for line in f:
             line = line.replace('\n', '')
+
+            # empty?
             if line == '':
                 continue
-            m = re.match(r'[0-9]* ', line).end()
-            line_no = int(line[:m-1])
-            sentence = line[m:]
-            if line_no == 21: # process query.
-                sentence = sentence.split('\t')
+
+            # process 
+            m = re.match(r'[0-9]* ', line).end() # get the index of line number, r'' means raw string
+            line_no = int(line[:m-1]) #  the line number
+            sentence = line[m:] # the sentence
+
+            # if it is query.
+            if line_no == 21: 
+                sentence = sentence.split('\t') # the ans ,query and cand are seperated by a tab
                 query = sentence[0].strip().split(' ')
                 answer = sentence[1].strip()
                 candidate = sentence[3].strip().split('|')
-                candidate = [c for c in candidate if c]
+                candidate = [c for c in candidate if c] # now candidate is a list of all cand words
+
                 while len(candidate) < 10:
                     candidate.append('<null>')
                 assert(len(candidate) == 10)
+
+                # ex is a dict
                 ex = {
                     'context': context,
                     'query': query,
@@ -39,12 +48,19 @@ def read_cbt(path, limit=None):
                     'candidate': candidate
                 }
                 assert(len(context) == 20)
+
+                # append to a list of dicts -> exs
                 exs.append(ex)
+
+                # if we only want to train small amount, --small provided in arg
                 if limit and len(exs) > limit:
                     break
                 context = []
+
+            # if it is normal sentence, append to context, it will be add to exs after we meet a query
             else:
                 context.append(sentence.strip().split(' '))
+
         return exs
 
 

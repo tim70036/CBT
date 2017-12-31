@@ -42,6 +42,10 @@ class CBTLearner(object):
             #    print '[warning] exceeding sentence max length.'
             #    sen = sen[:self.sen_maxlen]
             return sen
+
+        # Examine given data(train or test data)
+        # Check each word in a sentence(a list of words)
+        # If a word is not in vocab, convert it into '<unk>'
         for ex in exs:
             new_context = []
             for sen in ex['context']:
@@ -50,10 +54,12 @@ class CBTLearner(object):
             ex['context'] = new_context
             ex['query'] = preprocess(ex['query'])
             ex['candidate'] = preprocess(ex['candidate'])
-            ex['answer'] = preprocess([ex['answer']])[0]
+            ex['answer'] = preprocess([ex['answer']])[0] # make sure answer is a word(string)
 
 
     def create_vocab(self, exs):
+
+        # word pool for all word in training data
         vocab = {
             '<null>': 0, # no word in current position.
             '<unk>': 1,  # unknown word.
@@ -62,15 +68,19 @@ class CBTLearner(object):
 
         def add_word_if_not_exist(word):
             if word not in vocab:
-                vocab[word] = len(vocab)
+                vocab[word] = len(vocab) # give each word a num in order to create ivocab?
 
         def add_sen_if_not_exist(sentence):
-            sentence = self.preprocess_sentence(sentence)
-            for word in sentence:
+            sentence = self.preprocess_sentence(sentence) #return lower case
+            for word in sentence: # add word into vocab
                 add_word_if_not_exist(word)
-            if len(sentence) > self.sen_maxlen:
+            if len(sentence) > self.sen_maxlen: # update max len of all sentences 
                 self.sen_maxlen = len(sentence)
 
+        # Take out each story from list, each story is a dictionary
+        # Each story contains context(20 setences, a list of 20 list), query(1 sentence, list), cand(10 words, list), answer(1 word, string)
+        # Note that each sentence is a list of words
+        # Adding words(not repeat) into vocab
         for ex in exs:
             for sen in ex['context']:
                 add_sen_if_not_exist(sen)
@@ -84,7 +94,7 @@ class CBTLearner(object):
         print '[batchsize]', self.batchsize
 
         self.vocab = vocab
-        self.ivocab = {val: key for (key ,val) in self.vocab.items()}
+        self.ivocab = {val: key for (key ,val) in self.vocab.items()} 
         self.vocab_size = vocab_size
 
 
@@ -135,10 +145,10 @@ class CBTLearner(object):
         contexts = T.ltensor3('contexts')
         querys = T.lmatrix('querys')
         yvs = T.lvector('yvs')
-        hop = 1
+        hop = 7
 
         params = []
-        question_layer = Embed(self.vocab_size, self.hidden_dim)
+        question_layer = Embed(self.vocab_size, self.hidden_dim) # layer.py
         q = T.reshape(question_layer(querys.flatten()),
                       (self.batchsize, self.sen_maxlen, self.hidden_dim)
                       )
