@@ -8,10 +8,12 @@ import pdb, traceback, sys
 
 import argparse
 
+sys.setrecursionlimit(1000000000000)
+
 # Parsing Argument
 parser = argparse.ArgumentParser(description='LSTM Embedding Baseline')
 parser.add_argument('--task', type=str, default='cn')
-parser.add_argument('--lr', type=float, default=0.01)
+parser.add_argument('--lr', type=float, default=0.0001)
 parser.add_argument('--dim', type=int, default=200)
 parser.add_argument('--iter', type=int, default=20)
 parser.add_argument('--encoder', type=str, default='bow')
@@ -41,7 +43,6 @@ try:
     else:
         train_exs = read_cbt(train_path)
     test_exs = read_cbt(test_path)
-
 
     # Preprocess Data, embedding.py
     learner = CBTLearner(batchsize=64, hidden_dim=100, lr=args.lr, encoder=args.encoder, 
