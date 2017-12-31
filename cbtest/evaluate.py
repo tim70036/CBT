@@ -39,11 +39,5 @@ class Experiment(object):
     def next(self):
         self.count += 1
 
-    # load back
-    def load_pickle(self, **kwargs):
-        loader=pickle
-        for (key, dat) in kwargs.items():
-            with open(path.join('result', self.runid, str(20), key), 'r') as f:
-                loader.load(dat, f)
 
 

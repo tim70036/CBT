@@ -8,7 +8,7 @@ import pdb, traceback, sys
 
 import argparse
 
-sys.setrecursionlimit(1000000000000)
+sys.setrecursionlimit(1000000000)
 
 # Parsing Argument
 parser = argparse.ArgumentParser(description='LSTM Embedding Baseline')
