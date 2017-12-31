@@ -145,7 +145,7 @@ class CBTLearner(object):
         contexts = T.ltensor3('contexts')
         querys = T.lmatrix('querys')
         yvs = T.lvector('yvs')
-        hop = 7
+        hop = 1
 
         params = []
         question_layer = Embed(self.vocab_size, self.hidden_dim) # layer.py
