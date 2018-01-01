@@ -21,6 +21,7 @@ parser.add_argument('--memory', type=str, default='lexical')
 parser.add_argument('--small', action='store_true')
 parser.add_argument('--PE', action='store_true')
 parser.add_argument('--window_b', type=int, default=2)
+parser.add_argument('--model', type=str, default='')
 
 args = parser.parse_args()
 print colorize('[arguments]\t' + str(args), 'red')
@@ -100,6 +101,14 @@ try:
     # RUNRUNRUN
     learner.compile()
 
+    # If we load pretrained model
+    if args.model:
+        print 'loading model...'
+        f = open(path.join('model', 'fprop'), 'r')
+        learner.fprop = pickle.load(f)
+        f = open(path.join('model', 'bprop'), 'r')
+        learner.bprop = pickle.load(f)
+        
     experiment = Experiment('memory-net-%s' % args.encoder)
 
     for it in range(args.iter):
