@@ -108,7 +108,7 @@ try:
         learner.fprop = pickle.load(f)
         f = open(path.join('model', 'bprop'), 'r')
         learner.bprop = pickle.load(f)
-        
+
     experiment = Experiment('memory-net-%s' % args.encoder)
 
     for it in range(args.iter):
@@ -116,8 +116,8 @@ try:
         (acc, errs) = learner.test(test_exs)
         print '[epoch %d]' % it, 'accuracy = ', acc
 
-        # Save model every 5 rounds, evaluate.py
-        if it % 5 == 0:
+        # Save model every 10 rounds, evaluate.py
+        if it % 10 == 0:
             print 'saving model...'
             print colorize('[arguments]\t' + str(args), 'red')
             experiment.log_pickle(fprop=learner.fprop,
