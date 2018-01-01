@@ -106,11 +106,9 @@ try:
 
     # If we load pretrained model
     if args.model:
-        print 'loading model...'
-        f = open(path.join('model', args.model, 'fprop'), 'r')
-        learner.fprop = pickle.load(f)
-        f = open(path.join('model',args.model,  'bprop'), 'r')
-        learner.bprop = pickle.load(f)
+        print 'loading model from ' + path.join('model', args.model, 'checkpoint')
+        with open(path.join('model', args.model, 'checkpoint'), 'rb') as dill_file:
+            learner = dill.load(dill_file)
 
     experiment = Experiment('memory-net-%s' % args.encoder)
 
@@ -122,7 +120,7 @@ try:
         #Save model every 10 rounds, evaluate.py
         if it % 10 == 0:
             print 'saving model...'
-            with open("checkpoint", "wb") as dill_file:
+            with open(path.join('checkpoint'), 'wb') as dill_file:
                 dill.dump(learner, dill_file)
 
         experiment.next()
@@ -133,7 +131,7 @@ except:
 
 print 'saving model...'
 # Save model, evaluate.py
-with open("checkpoint", "wb") as dill_file:
+with open(path.join('checkpoint'), 'wb') as dill_file:
     dill.dump(learner, dill_file)
 
 #experiment.log_pickle(fprop=learner.fprop,

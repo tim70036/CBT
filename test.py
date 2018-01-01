@@ -108,7 +108,7 @@ except:
     pdb.post_mortem(tb)
 
 print 'loading model...'
-with open("checkpoint", "rb") as dill_file:
+with open(path.join('model', args.model, 'checkpoint'), 'rb') as dill_file:
     learner = dill.load(dill_file)
 print 'load complete'
 
