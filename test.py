@@ -107,7 +107,7 @@ except:
     traceback.print_exc()
     pdb.post_mortem(tb)
 
-print 'loading model...'
+print 'loading model from ' + path.join('model', args.model, 'checkpoint')
 with open(path.join('model', args.model, 'checkpoint'), 'rb') as dill_file:
     learner = dill.load(dill_file)
 print 'load complete'

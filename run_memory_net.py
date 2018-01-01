@@ -110,7 +110,6 @@ try:
         with open(path.join('model', args.model, 'checkpoint'), 'rb') as dill_file:
             learner = dill.load(dill_file)
 
-    experiment = Experiment('memory-net-%s' % args.encoder)
 
     for it in range(args.iter):
         learner.train(train_exs, num_iter=1)
@@ -119,20 +118,17 @@ try:
 
         #Save model every 10 rounds, evaluate.py
         if it % 10 == 0:
-            print 'saving model...'
+            print 'saving model to' + path.join('checkpoint')
             with open(path.join('checkpoint'), 'wb') as dill_file:
                 dill.dump(learner, dill_file)
 
-        experiment.next()
 except:
     type, value, tb = sys.exc_info()
     traceback.print_exc()
     pdb.post_mortem(tb)
 
-print 'saving model...'
-# Save model, evaluate.py
+# Save model
+print 'saving model to' + path.join('checkpoint')
 with open(path.join('checkpoint'), 'wb') as dill_file:
     dill.dump(learner, dill_file)
 
-#experiment.log_pickle(fprop=learner.fprop,
-#        bprop=learner.bprop)
