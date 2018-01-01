@@ -5,6 +5,8 @@ from cbtest.baseline.embedding import *
 from cbtest.evaluate import Experiment
 import random
 import pdb, traceback, sys
+from six.moves import cPickle as pickle
+from os import path
 
 import argparse
 
