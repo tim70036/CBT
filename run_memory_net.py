@@ -104,9 +104,9 @@ try:
     # If we load pretrained model
     if args.model:
         print 'loading model...'
-        f = open(path.join('model', 'fprop'), 'r')
+        f = open(path.join('model', args.model, 'fprop'), 'r')
         learner.fprop = pickle.load(f)
-        f = open(path.join('model', 'bprop'), 'r')
+        f = open(path.join('model',args.model,  'bprop'), 'r')
         learner.bprop = pickle.load(f)
 
     experiment = Experiment('memory-net-%s' % args.encoder)
