@@ -7,6 +7,7 @@ from six.moves import cPickle as pickle
 from os import path
 import random
 import pdb, traceback, sys
+import dill
 
 import argparse
 
@@ -107,11 +108,9 @@ except:
     pdb.post_mortem(tb)
 
 print 'loading model...'
-f = open(path.join('model', 'fprop'), 'r')
-learner.fprop = pickle.load(f)
-f = open(path.join('model', 'bprop'), 'r')
-learner.bprop = pickle.load(f)
+with open("checkpoint", "rb") as dill_file:
+    learner = dill.load(dill_file)
 print 'load complete'
 
 print 'testing model'
-
+(acc, errs) = learner.test(test_exs)

@@ -7,6 +7,7 @@ import random
 import pdb, traceback, sys
 from six.moves import cPickle as pickle
 from os import path
+import dill
 
 import argparse
 
@@ -118,12 +119,11 @@ try:
         (acc, errs) = learner.test(test_exs)
         print '[epoch %d]' % it, 'accuracy = ', acc
 
-        # Save model every 10 rounds, evaluate.py
+        #Save model every 10 rounds, evaluate.py
         if it % 10 == 0:
             print 'saving model...'
-            print colorize('[arguments]\t' + str(args), 'red')
-            experiment.log_pickle(fprop=learner.fprop,
-            bprop=learner.bprop)
+            with open("checkpoint", "wb") as dill_file:
+                dill.dump(learner, dill_file)
 
         experiment.next()
 except:
@@ -133,5 +133,8 @@ except:
 
 print 'saving model...'
 # Save model, evaluate.py
-experiment.log_pickle(fprop=learner.fprop,
-        bprop=learner.bprop)
+with open("checkpoint", "wb") as dill_file:
+    dill.dump(learner, dill_file)
+
+#experiment.log_pickle(fprop=learner.fprop,
+#        bprop=learner.bprop)
