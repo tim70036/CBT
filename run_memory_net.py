@@ -110,15 +110,14 @@ try:
         with open(path.join('model', args.model, 'checkpoint'), 'rb') as dill_file:
             learner = dill.load(dill_file)
 
-
     for it in range(args.iter):
         learner.train(train_exs, num_iter=1)
         (acc, errs) = learner.test(test_exs)
         print '[epoch %d]' % it, 'accuracy = ', acc
 
-        #Save model every 10 rounds, evaluate.py
+        #Save model every 10 rounds
         if it % 10 == 0:
-            print 'saving model to' + path.join('checkpoint')
+            print 'saving model to ' + path.join('checkpoint')
             with open(path.join('checkpoint'), 'wb') as dill_file:
                 dill.dump(learner, dill_file)
 
@@ -128,7 +127,6 @@ except:
     pdb.post_mortem(tb)
 
 # Save model
-print 'saving model to' + path.join('checkpoint')
+print 'saving model to ' + path.join('checkpoint')
 with open(path.join('checkpoint'), 'wb') as dill_file:
     dill.dump(learner, dill_file)
-
