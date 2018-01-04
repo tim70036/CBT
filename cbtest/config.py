@@ -20,3 +20,5 @@ cbt_p_val = os.path.join(cbt_datadir, 'cbtest_P_valid_2000ex.txt')
 cbt_v_train = os.path.join(cbt_datadir, 'cbtest_V_train.txt')
 cbt_v_test = os.path.join(cbt_datadir, 'cbtest_V_test_2500ex.txt')
 cbt_v_val = os.path.join(cbt_datadir, 'cbtest_V_valid_2000ex.txt')
+
+test_set = os.path.join(cbt_datadir, 'test_set.txt')
