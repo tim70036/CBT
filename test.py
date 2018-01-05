@@ -26,8 +26,8 @@ def read_list(path):
     file.seek(0)
     new_list = []
     for item in [s.replace('\n','') for s in file.readlines()]:
-	if item not in new_list:
-	    new_list.append(item)
+        if item not in new_list:
+            new_list.append(item)
     file.close()
     return new_list
 
@@ -147,7 +147,7 @@ def pred(learner, exs):
         minibatch = exs[offset:offset + learner.batchsize]
         while len(minibatch) < learner.batchsize:
             minibatch.append(minibatch[-1])
-	    cnt += 1
+            cnt += 1
         (contexts, querys, cvs) = encode_minibatch_test(learner,minibatch)
 
         inds = np.argmax(learner.fprop(contexts, querys, cvs)
@@ -158,7 +158,7 @@ def pred(learner, exs):
         for i in range(0,learner.batchsize):
             if learner.ivocab[preds[i]] in minibatch[i]['candidate']:
                 print minibatch[i]['candidate'].index(learner.ivocab[preds[i]])
-		all_preds.append(minibatch[i]['candidate'].index(learner.ivocab[preds[i]]))
+                all_preds.append(minibatch[i]['candidate'].index(learner.ivocab[preds[i]]))
     all_preds = all_preds[0:len(all_preds)-cnt]
     return all_preds
 
