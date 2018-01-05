@@ -180,6 +180,7 @@ parser.add_argument('--model', type=str, default='')
 # yes for get candidate_pool file , no for rebuild candidate pool
 parser.add_argument('--get_set' , action='store_true')
 args = parser.parse_args()
+param_b = args.window_b  
 print colorize('[arguments]\t' + str(args), 'red')
 
 # The default task is 'cn', can be changed by providing argument --task
@@ -313,7 +314,36 @@ try:
             cat.append('non')
         count += 1
     print 'division complete'
-    param_b = args.window_b    
+
+    # print category
+    print '---------CN----------'
+    for i in range(0, len(cn_id)):
+        info = '#' + str(cn_id[i]) + ' : ' 
+        for cand in test_cn_exs[i]['candidate']:
+            info += cand + ' '
+        print info
+
+    print '---------NE----------'
+    for i in range(0, len(ne_id)):
+        info = '#' + str(ne_id[i]) + ' : ' 
+        for cand in test_ne_exs[i]['candidate']:
+            info += cand + ' '
+        print info
+
+    print '---------P-----------'
+    for i in range(0, len(p_id)):
+        info = '#' + str(p_id[i]) + ' : ' 
+        for cand in test_p_exs[i]['candidate']:
+            info += cand + ' '
+        print info
+
+    print '---------V-----------'
+    for i in range(0, len(v_id)):
+        info = '#' + str(v_id[i]) + ' : ' 
+        for cand in test_v_exs[i]['candidate']:
+            info += cand + ' '
+        print info
+      
 except:
     type, value, tb = sys.exc_info()
     traceback.print_exc()
