@@ -284,28 +284,35 @@ try:
     # for each story ex
     for ex in test_exs:
         # determine ex is belong to which kind of question
+        info = '#' + str(count) + ' : '
         for ex_cand in ex['candidate']:
             ex_cand = ex_cand.lower()
             if ex_cand in cn_cand_pool:
                 test_cn_exs.append(ex)
                 cn_id.append(count)
+                info += 'cn'
                 break
             elif ex_cand in ne_cand_pool:
                 test_ne_exs.append(ex)
                 ne_id.append(count)
+                info += 'ne'
                 break
             elif ex_cand in p_cand_pool:
                 test_p_exs.append(ex)
                 p_id.append(count)
+                info += 'p'
                 break
             elif ex_cand in v_cand_pool:
                 test_v_exs.append(ex)
                 v_id.append(count)
+                info += 'v'
                 break
         else: # finish for loop but no match
             test_ne_exs.append(ex)
             ne_id.append(count)
+            info += 'non'
         count += 1
+        print info
     print 'division complete'
     param_b = args.window_b    
 except:
