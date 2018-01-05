@@ -157,7 +157,7 @@ def pred(learner, exs):
 		
         for i in range(0,learner.batchsize):
             if learner.ivocab[preds[i]] in minibatch[i]['candidate']:
-                print minibatch[i]['candidate'].index(learner.ivocab[preds[i]])
+                #print minibatch[i]['candidate'].index(learner.ivocab[preds[i]])
                 all_preds.append(minibatch[i]['candidate'].index(learner.ivocab[preds[i]]))
     all_preds = all_preds[0:len(all_preds)-cnt]
     return all_preds
@@ -284,35 +284,34 @@ try:
     # for each story ex
     for ex in test_exs:
         # determine ex is belong to which kind of question
-        info = '#' + str(count) + ' : '
+        cat = []
         for ex_cand in ex['candidate']:
             ex_cand = ex_cand.lower()
             if ex_cand in cn_cand_pool:
                 test_cn_exs.append(ex)
                 cn_id.append(count)
-                info += 'cn'
+                cat.append('cn')
                 break
             elif ex_cand in ne_cand_pool:
                 test_ne_exs.append(ex)
                 ne_id.append(count)
-                info += 'ne'
+                cat.append('ne')
                 break
             elif ex_cand in p_cand_pool:
                 test_p_exs.append(ex)
                 p_id.append(count)
-                info += 'p'
+                cat.append('p')
                 break
             elif ex_cand in v_cand_pool:
                 test_v_exs.append(ex)
                 v_id.append(count)
-                info += 'v'
+                cat.append('v')
                 break
         else: # finish for loop but no match
             test_ne_exs.append(ex)
             ne_id.append(count)
-            info += 'non'
+            cat.append('non')
         count += 1
-        print info
     print 'division complete'
     param_b = args.window_b    
 except:
@@ -357,5 +356,5 @@ output_dict.update(zip(v_id,v_ans))
 
 # sort by id
 output_orderDict = collections.OrderedDict(sorted(output_dict.items()))
-for k, v in output_orderDict.iteritems(): print '#' + str(k) + ' : ' + str(v)
+for k, v in output_orderDict.iteritems(): print '#' + str(k) + ' : ' + str(v) + ' ' + cat[k]
 write_csv('./answer.csv', output_orderDict)
