@@ -280,6 +280,7 @@ try:
     v_id = []
     count = 1 #record id of ex
 
+    print 'dividing test set into different categories'
     # for each story ex
     for ex in test_exs:
         # determine ex is belong to which kind of question
@@ -305,37 +306,41 @@ try:
             test_ne_exs.append(ex)
             ne_id.append(count)
         count += 1
-
+    print 'division complete'
     param_b = args.window_b    
 except:
     type, value, tb = sys.exc_info()
     traceback.print_exc()
     pdb.post_mortem(tb)
 
-# loading 4 models
+# CN model
 print 'loading cn model from ' + path.join('model', args.model, 'cn_learner')
 with open(path.join('model', args.model, 'cn_learner'), 'rb') as dill_file:
-    cn_learner = dill.load(dill_file)
+    learner = dill.load(dill_file)
+print 'testing cn model...'
+cn_ans = pred(learner,test_cn_exs)
+
+# NE model
 print 'loading ne model from ' + path.join('model', args.model, 'ne_learner')
 with open(path.join('model', args.model, 'ne_learner'), 'rb') as dill_file:
-    ne_learner = dill.load(dill_file)
+    learner = dill.load(dill_file)
+print 'testing ne model...'
+ne_ans = pred(learner,test_ne_exs)
+
+# P model
 print 'loading p model from ' + path.join('model', args.model, 'p_learner')
 with open(path.join('model', args.model, 'p_learner'), 'rb') as dill_file:
-    p_learner = dill.load(dill_file)
-print 'loading cn model from ' + path.join('model', args.model, 'v_learner')
-with open(path.join('model', args.model, 'v_learner'), 'rb') as dill_file:
-    v_learner = dill.load(dill_file)
-print 'load models complete'
-
-# start test
-print 'testing cn model...'
-cn_ans = pred(cn_learner,test_cn_exs)
-print 'testing ne model...'
-ne_ans = pred(ne_learner,test_ne_exs)
+    learner = dill.load(dill_file)
 print 'testing p model...'
-p_ans = pred(p_learner,test_p_exs)
-print 'testing cn model...'
-v_ans = pred(v_learner,test_v_exs)
+p_ans = pred(learner,test_p_exs)
+
+# V model
+print 'loading v model from ' + path.join('model', args.model, 'v_learner')
+with open(path.join('model', args.model, 'v_learner'), 'rb') as dill_file:
+    learner = dill.load(dill_file)
+print 'testing v model...'
+v_ans = pred(learner,test_v_exs)
+
 
 # connect 4 ans_lists and id_lists 
 output_dict = dict(zip(cn_id,cn_ans))
@@ -345,5 +350,5 @@ output_dict.update(zip(v_id,v_ans))
 
 # sort by id
 output_orderDict = collections.OrderedDict(sorted(output_dict.items()))
-for k, v in output_orderDict.iteritems(): print k,v
+for k, v in output_orderDict.iteritems(): print '#' + str(k) + ' : ' + str(v)
 write_csv('./final_output/answer.csv', output_orderDict)

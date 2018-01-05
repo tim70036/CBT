@@ -149,6 +149,8 @@ class CBTLearner(object):
 
         params = []
         question_layer = Embed(self.vocab_size, self.hidden_dim) # layer.py
+
+        # q is a tensor reshape from question_layer.W , batchsize * sen_maxlen * hidden_dim 
         q = T.reshape(question_layer(querys.flatten()),
                       (self.batchsize, self.sen_maxlen, self.hidden_dim)
                       )
@@ -156,20 +158,26 @@ class CBTLearner(object):
             lmat = position_encoding(self.sen_maxlen, self.hidden_dim).dimshuffle('x', 0, 1)
             print '[memory network] use PE'
             q = q * lmat
+
+        # u is a vector of means(64 means of each sentence) from 64(batchsize) stories
         u = mean(q, axis=1)
         params.extend(question_layer.params)
 
         mem_layers = []
         for hi in range(hop):
             mem_layer = MemoryLayer(self.batchsize, self.mem_size, self.unit_size, self.vocab_size, self.hidden_dim,
-                                    **self.kwargs)
+                                    **self.kwargs)# define mean
             params.extend(mem_layer.params)
             mem_layers.append(mem_layer)
+
+            # o is weighted sum 
             o = mem_layer(contexts, u)
             u = u + o
 
         linear = LinearLayer(self.hidden_dim, self.vocab_size)
         params.extend(linear.params)
+
+        # Take the output from memory and do inner product through weight matrix
         probs = softmax(linear(u))
         inputs = {
             'contexts': contexts,
@@ -358,6 +366,8 @@ class CBTLearner(object):
             'yvs': yvs,
             'cvs': T.lmatrix('cvs')
         }
+
+        # probs -> predicted answer, inputs -> theano var, params -> a shitload of rand vector
         return (probs, inputs, params)
 
     def loss_selfsup(self, probs, yvs):

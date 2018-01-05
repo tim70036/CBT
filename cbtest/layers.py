@@ -65,6 +65,7 @@ class Embed(Layer):
     def __init__(self, vocab_size, hidden_dim):
         self.vocab_size = vocab_size
         self.hidden_dim = hidden_dim
+        # W is a matrix (vocabsize * dim), filling with float from normal distribution(mean 0 var 1)
         self.W = theano.shared(value=(npr.randn(vocab_size, hidden_dim) * 0.01).astype(theano.config.floatX),
                                name='W')
         self.params = [self.W]
@@ -271,13 +272,15 @@ class MemoryLayer(object):
 
         contexts has shape (batchsize, #context, seqlen)
         u has shape (batchsize, hidden_dim)
-        '''
+        ''' 
+        # probability vector
         probs = self.get_probs(contexts, u)
 
         # output vectors.
         c = T.reshape(self.output_embed(contexts.flatten()), (self.batchsize, self.mem_size, self.unit_size, self.hidden_dim))
         c = self.encoder_func(c)
 
+        # weighted sum (c * probs)
         outputs, updates = theano.scan(fn=lambda probv, cv: dot(cv, T.transpose(probv)),
                                        sequences=[probs, c.dimshuffle(0, 2, 1)]
                                        )
