@@ -171,14 +171,14 @@ parser.add_argument('--lr', type=float, default=0.0001)
 parser.add_argument('--dim', type=int, default=200)
 parser.add_argument('--iter', type=int, default=20)
 parser.add_argument('--encoder', type=str, default='bow')
-parser.add_argument('--memory', type=str, default='lexical')
+parser.add_argument('--memory', type=str, default='window')
 parser.add_argument('--small', action='store_true')
 parser.add_argument('--PE', action='store_true')
 parser.add_argument('--window_b', type=int, default=2)
 parser.add_argument('--model', type=str, default='')
 
 # yes for get candidate_pool file , no for rebuild candidate pool
-parser.add_argument('--get_set' , type=str , default='no')
+parser.add_argument('--get_set' , action='store_true')
 args = parser.parse_args()
 print colorize('[arguments]\t' + str(args), 'red')
 
@@ -206,7 +206,7 @@ try:
     ne_cand_pool = []
     p_cand_pool = []
     v_cand_pool = []
-    if args.get_set == 'yes':
+    if args.get_set :
         print 'loading cand pool...'
     	cn_cand_pool = read_list('./cand_pool/cn_cand_pool.txt')
     	ne_cand_pool = read_list('./cand_pool/ne_cand_pool.txt')
@@ -351,4 +351,4 @@ output_dict.update(zip(v_id,v_ans))
 # sort by id
 output_orderDict = collections.OrderedDict(sorted(output_dict.items()))
 for k, v in output_orderDict.iteritems(): print '#' + str(k) + ' : ' + str(v)
-write_csv('./final_output/answer.csv', output_orderDict)
+write_csv('./answer.csv', output_orderDict)
