@@ -356,5 +356,5 @@ output_dict.update(zip(v_id,v_ans))
 
 # sort by id
 output_orderDict = collections.OrderedDict(sorted(output_dict.items()))
-for k, v in output_orderDict.iteritems(): print '#' + str(k) + ' : ' + str(v) + ' ' + cat[k]
+for k, v in output_orderDict.iteritems(): print '#' + str(k) + ' : ' + str(v) + ' ' + cat[k-1]
 write_csv('./answer.csv', output_orderDict)
