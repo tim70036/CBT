@@ -279,12 +279,12 @@ try:
     p_id = []
     v_id = []
     count = 1 #record id of ex
+    cat = []  #record category
 
     print 'dividing test set into different categories'
     # for each story ex
     for ex in test_exs:
         # determine ex is belong to which kind of question
-        cat = []
         for ex_cand in ex['candidate']:
             ex_cand = ex_cand.lower()
             if ex_cand in cn_cand_pool:
