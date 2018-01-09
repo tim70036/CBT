@@ -75,8 +75,6 @@ class Embed(Layer):
         return self.W[symbols, :]
 
 
-
-
 class LSTM(Layer):
     '''
     basic LSTM layer

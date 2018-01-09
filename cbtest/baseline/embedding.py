@@ -126,10 +126,10 @@ class CBTLearner(object):
         cvs = []
         for ex in minibatch:
             query = self.encode_query(ex)
-            contexts.append(self.encode_context(ex))
-            querys.append(self.encode_query(ex))
-            yvs.append(self.encode_label(ex))
-            cvs.append(self.encode_candidate(ex))
+            contexts.append(self.encode_context(ex)) # return a array(n*n)
+            querys.append(self.encode_query(ex)) # return an array(1 row)
+            yvs.append(self.encode_label(ex)) # return a number , index of answer in vocab
+            cvs.append(self.encode_candidate(ex)) # return a list of number, each is index of each candidate in vocab
         contexts = np.vstack([context[np.newaxis, ...] for context in contexts])
         querys = np.array(querys, dtype=np.int64)
         yvs = np.array(yvs, dtype=np.int64)
@@ -233,12 +233,12 @@ class CBTLearner(object):
         and extract windows of size 2 * b + 1 around these words.
         '''
         candidates = set(ex['candidate'])
-        context = sum(ex['context'], [])
+        context = sum(ex['context'], []) # every slot in context is a list currently. we need to make the whole context become a list, each block is word
         inds = []
         for (ind, word) in enumerate(context):
             if word in candidates:
-                inds.append(ind + param_b)
-        context = [0] * param_b + [self.vocab[w] for w in context] + [0] * param_b
+                inds.append(ind + param_b) # param_b are added as  offset for padding 0
+        context = [0] * param_b + [self.vocab[w] for w in context] + [0] * param_b  # vocab return the index of that word in vocab
         res = np.zeros((self.mem_size, self.unit_size), dtype=np.int64)
         for (ei, ind) in enumerate(inds):
             res[ei, :] = context[ind - param_b : ind + param_b + 1]
